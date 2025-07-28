@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>Данные о товаре</title>
+</head>
+<body>
+    {% if error %}
+        {{ error }}
+    {% endif %}
+
+    {% if item %}
+        <p>Наименование товара: {{ item.name }}</p>
+        <p>Описание: {{ item.description }}</p>
+        <p>Цена: {{ price_in_dollars|floatformat:2 }}</p>
+
+        <button id="buy-button">Buy</button>
+        <script type="text/javascript">
+          var stripe = Stripe('{{ stripe_public_key }}');
+          var buyButton = document.getElementById('buy-button');
+    
+          buyButton.addEventListener('click', function() {
+            fetch('/shop/buy/{{ item.id }}', {method: 'GET'})
+            .then(response => response.json())
+            .then(session => stripe.redirectToCheckout({ sessionId: session.session_id }))
+          });
+        </script>
+    {% endif %}
+
+</body>
+</html>
+
