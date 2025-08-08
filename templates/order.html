@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>Корзина</title>
+</head>
+<body>
+    {% if error %}
+        {{ error }}
+    {% endif %}
+
+    {% if order %}
+
+    <h2>Заказ №{{ order.id }}</h2>
+
+    <ul>
+        {% for item in order_rub %}
+            <li>
+                <strong>Наименование товара: {{ item.name }}</strong>
+                <p>Описание: {{ item.description }}</p>
+                <p>Цена: {{ item.price|floatformat:2 }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Итого:</strong> {{ order.total_amount|floatformat:2 }}</p>
+    {% endif %}
+
+    <button id="buy-button">Buy</button>
+        <script type="text/javascript">
+          var stripe = Stripe('{{ stripe_public_key }}');
+          var buyButton = document.getElementById('buy-button');
+    
+          buyButton.addEventListener('click', function() {
+            fetch('/shop/buy_order/{{ order.id }}', {method: 'GET'})
+            .then(response => response.json())
+            .then(session => stripe.redirectToCheckout({ sessionId: session.session_id }))
+          });
+        </script>
+
+</body>
+</html>
+

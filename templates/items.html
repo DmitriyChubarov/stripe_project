@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>Данные о товарах</title>
+</head>
+<body>
+    {% if error %}
+        {{ error }}
+    {% endif %}
+
+    {% if items %}
+        {% for item in items %}
+        <p>id товара: {{ item.id }}</p>
+        <p>Наименование товара: {{ item.name }}</p>
+        <p>Описание: {{ item.description }}</p>
+        <p>Цена: {{ item.price|floatformat:2 }}</p><br>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>
+

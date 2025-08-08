@@ -7,3 +7,12 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Order(models.Model):
+    item = models.ManyToManyField(Item)
+
+    def __str__(self) -> str:
+        return f"Order #{self.id} ({self.item.count()} items)"
+    
+    def total_amount(self):
+        return (sum(i.price for i in self.item.all())) / 100
